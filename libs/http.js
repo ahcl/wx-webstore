@@ -2,30 +2,37 @@
     module.exports = factory()
 }((function () { 'use strict';
     var http = {
-            save: function (url, data, successFn, bizFailFn, options) {
-                data.id ? this.put(url+ '/' + data.id, data, successFn, bizFailFn, options) : this.post(url, data, successFn, bizFailFn, options)
+            save: function (url, data, successFn, options, bizFailFn) {
+                data.id ? this.put(url+ '/' + data.id, data, successFn, options, bizFailFn) : this.post(url, data, successFn, options, bizFailFn)
             },
-            get: function(url, successFn, bizFailFn, options) {
-                this.fetch(url, {}, successFn, bizFailFn, options);
+            get: function(url, successFn, options, bizFailFn) {
+                this.fetch(url, {}, successFn, options, bizFailFn);
             },
-            post: function(url, data, successFn, bizFailFn, options) {
+            post: function(url, data, successFn, options, bizFailFn) {
                 console.log(url);
                 options = options || {};
                 options.method = 'POST';
-                this.fetch(url, data, successFn, bizFailFn, options);
+                this.fetch(url, data, successFn, options, bizFailFn);
             },
-            put: function(url, data, successFn, bizFailFn, options) {
+            put: function(url, data, successFn, options, bizFailFn) {
                 console.log(url);
                 options = options || {};
                 options.method = 'PUT';
-                this.fetch(url, data, successFn, bizFailFn, options);
+                this.fetch(url, data, successFn, options, bizFailFn);
             },
-            fetch: function(url, data, successFn, bizFailFn, {method = 'GET', loadingText = '数据载入中...', toastInfo = '' } = {}) {
+            delete: function(url, successFn, options, bizFailFn) {
+                console.log(url);
+                options = options || {};
+                options.method = 'DELETE';
+                this.fetch(url, {}, successFn, options, bizFailFn);
+            },
+            fetch: function(url, data, successFn, {method = 'GET', loadingText = '数据载入中...', toastInfo = '' } = {}, bizFailFn) {
                 var app = getApp()
                 console.log(url);
-                wx.showToast({title: loadingText, icon:'loading'});
+                console.log(data);
+                loadingText && wx.showToast({title: loadingText, icon:'loading'});
                 wx.request({
-                    url, data,
+                    url, data: data || {},
                     method,
                     success: function(res) {
                         if (res.data.success) {

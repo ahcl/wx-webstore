@@ -1,40 +1,47 @@
-.shipping-list {
+.invoice-list {
   width: 100%;
 }
 
-.shipping-actions {
+.invoice-actions {
   position: fixed;
   left: 0;
   bottom: 0;
+  width: 100%;
   height: 45px;
   line-height: 45px;
-  width: 100%;
 }
 
 .add-new-button {
   border-radius: 0;
+  background-color: #f00;
+  color:white;
 }
 
-.shipping {
+.invoice {
   width: 100%;
   background-color: white;
   margin-bottom: 10px;
 }
 
-.shipping-item-body {
+.invoice-item-body {
   padding: 0 10px;
   height: 40px;
   line-height: 40px;
 }
 
-.item-nick-name {
+.item-title {
   flex: 1;
   text-align: left;
+  line-height: 20px;
+  font-size: 16px;
 }
 
-.item-phone {
-  flex: 2;
+.item-type-name {
   text-align: right;
+  font-size: 14px;
+  background-color: #f6680a;
+  padding:5px;
+  color:white;
 }
 
 .item-address-full {
@@ -45,7 +52,7 @@
   color: #888;
 }
 
-.shipping-item-actions {
+.invoice-item-actions {
   padding: 0 10px;
   height: 40px;
   line-height: 40px;
@@ -84,4 +91,5 @@
 
 .edit-button, .remove-button {
   padding-left: 5px;
+  
 }

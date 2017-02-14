@@ -5,8 +5,8 @@ var app = getApp()
 Page({
     data: {
         isAppendDisabled: false,
-        isWaitAddNewShippingInfo: false,
-        shippings: [],
+        isWaitAddNewInvoiceInfo: false,
+        invoices: [],
         windowHeight: 627 - 45
     },
     onPullDownRefresh: function () {
@@ -18,12 +18,12 @@ Page({
         this.fetchData(false)
     },
     onShow: function () {
-        if (this.data.isWaitAddNewShippingInfo) {
+        if (this.data.isWaitAddNewInvoiceInfo) {
             let that = this
             this.fetchData(true, () => {
                 // wx.stopPullDownRefresh()
                 that.setData({
-                    isWaitAddNewShippingInfo: false
+                    isWaitAddNewInvoiceInfo: false
                 })
             })
         }
@@ -31,55 +31,56 @@ Page({
     //事件处理函数
     setDefaultTap: function (e) {
         let that = this
-        let shippingId = e.currentTarget.dataset.shippingId
-        app.libs.http.post(app.config[keys.CONFIG_SERVER].getBizUrl() + 'shippingSetDefault/' + shippingId, {}, () => {
-            let shippings = that.data.shippings
-            for (let i = 0; i < shippings.length; i++) {
-                if (shippings[i].default_flag) {
-                    shippings[i].default_flag = false
+        let invoiceId = e.currentTarget.dataset.invoiceId
+        app.libs.http.post(app.config[keys.CONFIG_SERVER].getBizUrl() + 'invoiceSetDefault/' + invoiceId, {}, () => {
+            let invoices = that.data.invoices
+            //let invoices = [{id:'1',title:'test',type_name:'testname'}]
+            for (let i = 0; i < invoices.length; i++) {
+                if (invoices[i].default_flag) {
+                    invoices[i].default_flag = false
                     break
                 }
             }
-            for (let i = 0; i < shippings.length; i++) {
-                if (shippings[i].id == shippingId) {
-                    shippings[i].default_flag = true
+            for (let i = 0; i < invoices.length; i++) {
+                if (invoices[i].id == invoiceId) {
+                    invoices[i].default_flag = true
                     break
                 }
             }
             that.setData({
-                shippings
+                invoices
             })
         }, { loadingText: '设置中...', toastInfo: '设为默认成功' })
     },
     editTap: function (e) {
         this.setData({
-            isWaitAddNewShippingInfo: true
+            isWaitAddNewInvoiceInfo: true
         })
         wx.navigateTo({
-            url: './shipping-details?needNavigationBack=true&shippingId=' + e.currentTarget.dataset.shippingId
+            url: './invoice-details?needNavigationBack=true&invoiceId=' + e.currentTarget.dataset.invoiceId
         })
 
     },
     removeTap: function (e) {
         let that = this
-        let shippingId = e.currentTarget.dataset.shippingId
+        let invoiceId = e.currentTarget.dataset.invoiceId
         wx.showActionSheet({
             itemList: ['删除后无法恢复，继续？'],
             itemColor: '#f00',
             success: function (res) {
                 if (res.tapIndex == 0) {
-                    app.libs.http.delete(app.config[keys.CONFIG_SERVER].getBizUrl() + 'shipping/' + shippingId, () => {
-                        let shippings = that.data.shippings
+                    app.libs.http.delete(app.config[keys.CONFIG_SERVER].getBizUrl() + 'invoice/' + invoiceId, () => {
+                        let invoices = that.data.invoices
                         let i = -1
-                        for (i = 0; i < shippings.length; i++) {
-                            if (shippings[i].id == shippingId) {
+                        for (i = 0; i < invoices.length; i++) {
+                            if (invoices[i].id == invoiceId) {
                                 break
                             }
                         }
                         if (i != -1) {
-                            shippings.splice(i, 1)
+                            invoices.splice(i, 1)
                             that.setData({
-                                shippings
+                                invoices
                             })
                         }
                     }, { loadingText: '删除中...', toastInfo: '删除成功' })
@@ -89,25 +90,25 @@ Page({
     },
     addNewTap: function () {
         this.setData({
-            isWaitAddNewShippingInfo: true
+            isWaitAddNewInvoiceInfo: true
         })
         wx.navigateTo({
-            url: './shipping-details?needNavigationBack=true'
+            url: './invoice-details?needNavigationBack=true'
         })
     },
     fetchData: function (refresh, cb) {
         let that = this;
-        let skip = refresh ? 0 : this.data.shippings.length;
-        app.libs.http.post(app.config[keys.CONFIG_SERVER].getBizUrl() + 'shippings/', { tenantId: app.config[keys.CONFIG_SERVER].getTenantId(), open_id: app.getSession().openid, page: { size: settings.LIST_PAGE_SIZE, skip } }, (shippings) => {
+        let skip = refresh ? 0 : this.data.invoices.length;
+        app.libs.http.post(app.config[keys.CONFIG_SERVER].getBizUrl() + 'invoices/', { tenantId: app.config[keys.CONFIG_SERVER].getTenantId(), open_id: app.getSession().openid, page: { size: settings.LIST_PAGE_SIZE, skip } }, (invoices) => {
             that.setData({
-                isAppendDisabled: shippings.length == 0,
-                shippings: refresh ? shippings : that.data.shippings.concat(shippings)
+                isAppendDisabled: invoices.length == 0,
+                invoices: refresh ? invoices : that.data.invoices.concat(invoices)
             })
         })
         if (cb && typeof cb == 'function') cb()
     },
     onLoad: function (options) {
-        console.log('shipping-list onLoad ')
+        console.log('invoice-list onLoad ')
         let that = this
         wx.getSystemInfo({
             success: function (ret) {

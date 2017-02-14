@@ -6,14 +6,14 @@
     <view class="shipping-details-phone">
       <input class="shipping-details-phone-value" placeholder="收件人电话" data-field-name="current.shipping_phone" bindblur="setInputData" value="{{current.shipping_phone}}" />
     </view>
-    <view class="h-flex shipping-details-pca">
+    <view class="h-flex shipping-details-pca" bindtap="openRegionPickerDialog">
       <block wx:if="{{ !current.province || !current.city || !current.area }}">
         <text class="shipping-details-pca-label">所在地区</text>
       </block>
       <text class="shipping-details-province">{{current.province}}</text>
       <text class="shipping-details-city">{{current.city}}</text>
       <text class="shipping-details-area">{{current.area}}</text>
-      <view class="item-arrow-right" bindtap="openRegionPickerDialog">
+      <view class="item-arrow-right">
         ...
       </view>
     </view>
@@ -23,7 +23,7 @@
   </scroll-view>
   <view class="shipping-details-actions">
     <view class="setDefaultIcon">
-      <icon class="defaultIcon" type="{{defaultFlag ? 'success' : 'circle'}}" size="24" color="{{defaultFlag ? 'green' : '#B3B3B3'}}" />
+      <icon class="defaultIcon" type="{{defaultFlag ? 'success' : 'circle'}}" size="24" color="{{defaultFlag ? 'green' : '#B3B3B3'}}" bindtap="setDefault" />
     </view>
     <view class="setDefaultText {{defaultFlag ? 'defaultIconText' : '' }}" bindtap="setDefault">设为默认地址</view>
     <button class="save-button" type="warn" size="45" bindtap="save">保存</button>

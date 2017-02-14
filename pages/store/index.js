@@ -9,9 +9,10 @@ Page({
     spus: []
   },
   onShareAppMessage: function () {
+    let desc = app.config[keys.CONFIG_SERVER].wxAppConfig.description || '销售睡眠监测仪器，定位手环，机器人等'
     return {
-      title: '梧斯源商城',
-      desc: '销售睡眠监测仪器，定位手环，机器人等',
+      title: app.appname,
+      desc,
       path: '/pages/store/index'
     }
   },
@@ -25,7 +26,7 @@ Page({
   },
   test: function () {
     wx.navigateTo({
-      url: '../mine/shipping-details'
+      url: '../shopping-cart/shopping-cart'
     })
   },
   //事件处理函数
@@ -49,6 +50,32 @@ Page({
   onLoad: function () {
     console.log('index onLoad')
     app.toast.init(this)
-    this.fetchData(true)
+    let that = this
+    let channelUnitNavSuffix = ''
+    try {
+      let channelUnit = wx.getStorageSync(keys.STG_CHANNEL_UNIT)
+      if (channelUnit) {
+        channelUnitNavSuffix = '*'
+        console.log(channelUnit)
+      }
+    } catch (e) {
+      // Do something when catch error
+      console.log('getStorageSync:STG_CHANNEL_UNIT')
+      console.log(e)
+    }
+    if (!app.appid) {
+      setTimeout(() => {
+        console.log('delay to wait load wxConfig')
+        app.appname && wx.setNavigationBarTitle({
+          title: app.appname + channelUnitNavSuffix
+        })
+        that.fetchData(true)
+      }, 500)
+    } else {
+      app.appname && wx.setNavigationBarTitle({
+        title: app.appname + channelUnitNavSuffix
+      })
+      that.fetchData(true)
+    }
   }
 })

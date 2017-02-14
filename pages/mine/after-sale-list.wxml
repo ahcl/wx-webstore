@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="after-sale-list" >
+    <view class="after-sale" wx:for="{{afterSales}}" wx:for-item="afterSale" wx:key="afterSale.id" data-order-id="{{afterSale.orderId}}" bindtap="afterSaleTap">
+      <view class="h-flex after-sale-item-body">
+        <text class="item-orderId">售后单编号：{{afterSale.code}}</text>
+        <text class="item-status">{{afterSale.biz_status == 'A0001' ? afterSale.biz_status_name: afterSale.audit_result_name}}</text>
+      </view>
+      <view class="h-flex after-sale-item-body">
+        <text class="item-type">{{afterSale.type_name}}</text>
+        <text class="item-order-id">查看订单</text>
+      </view>
+      <view class="h-flex after-sale-item-actions">
+        <text class="item-memo">理由：{{afterSale.memo}}</text>
+      </view>
+      <block wx:if="{{afterSale.biz_status!= 'A0001'}}">
+        <view class="after-sale-item-actions">
+            <text class="item-audit-comment">售后说明：{{afterSale.audit_comment}}</text>
+          </view>
+      </block>      
+    </view>
+  </view>
+</view>
+<import src="../../components/wx-toast/wx-toast.wxml" />
+<template is="wx-toast" data="{{toastOptions: toastOptions}}" />
